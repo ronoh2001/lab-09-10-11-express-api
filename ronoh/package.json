@@ -1,0 +1,36 @@
+{
+  "name": "lab-08-09-10",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "mocha",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ronoh2001/lab-09-10-11-express-api.git"
+  },
+  "author": "ronoh2001@gmail.com",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ronoh2001/lab-09-10-11-express-api/issues"
+  },
+  "homepage": "https://github.com/ronoh2001/lab-09-10-11-express-api#readme",
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "debug": "^2.2.0",
+    "gulp": "^3.9.1",
+    "gulp-eslint": "^2.0.0",
+    "gulp-mocha": "^2.2.0",
+    "superagent": "^2.0.0-alpha.3"
+  },
+  "dependencies": {
+    "body-parser": "^1.15.1",
+    "express": "^4.13.4",
+    "node-uuid": "^1.4.7"
+  }
+}
