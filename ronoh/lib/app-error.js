@@ -12,7 +12,6 @@ const AppError =module.exports =function(message, statusCode, responseMessage){
 AppError.prototype = Object.create(Error.prototype);
 
 AppError.isAppError = function(err){
-  // creating a static method
   debug('isAppError');
   return err instanceof AppError;
 };

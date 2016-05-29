@@ -4,10 +4,10 @@ const Router = require('express').Router;
 const debug = require('debug')('note:note-router');
 const bodyParser = require('body-parser').json();
 
-const AppError = require('../lib/app-error');
+// const AppError = require('../lib/app-error');
 const storage = require('../lib/storage');
 const Note = require('../model/note');
-// const sendError = require('../lib/error-response');
+const sendError = require('../lib/error-response');
 
 const noteRouter = module.exports = new Router();
 
@@ -28,61 +28,38 @@ function createNote(reqBody){
   });
 }
 
-noteRouter.post('/', bodyParser, function(req, res){
+noteRouter.post('/', bodyParser, sendError, function(req, res){
   debug('hit endpoint /api/note POST');
   createNote(req.body).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
-    // res.sendError(err);
-    console.error(err.message);
-    if(AppError.isAppError(err)){
-      res.status(err.statusCode).send(err.responseMessage);
-      return;
-    }
-    res.status(500).send('internal server error');
+    res.sendError(err);
   });
 });
 
-noteRouter.get('/', bodyParser, function(req, res){
+noteRouter.get('/:id', sendError, function(req, res){
   debug('hit endpoint /api/note GET');
   storage.fetchItem('note', req.params.id).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
-    console.error(err.message);
-    if(AppError.isAppError(err)){
-      res.status(err.statusCode).send(err.responseMessage);
-      return;
-    }
-    res.status(500).send('internal server error');
+    res.sendError(err);
   });
 });
 
-noteRouter.put('/', bodyParser, function(req, res){
+noteRouter.put('/', bodyParser, sendError, function(req, res){
   debug('hit endpoint /api/note PUT');
-  storage.updateItem('note', req.params.id).then(function(note){
+  storage.updateItem('note', req.body.id, req.body).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
-    console.error(err.message);
-    if(AppError.isAppError(err)){
-      res.status(err.statusCode).send(err.responseMessage);
-      res.end();
-      return;
-    }
-    res.status(400).send('bad request');
-    res.end();
+    res.sendError(err);
   });
 });
 
-noteRouter.delete('/', function(req, res){
+noteRouter.delete('/', sendError, function(req, res){
   debug('hit endpoint /api/note DELETE');
-  storage.deleteItem('note', req.params.id).then(function(note){
+  storage.deleteItem('note', req.body.id).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
-    console.error(err.message);
-    if(AppError.isAppError(err)){
-      res.status(err.statusCode).send(err.responseMessage);
-      return;
-    }
-    res.status(500).send('internal server error');
+    res.sendError(err);
   });
 });

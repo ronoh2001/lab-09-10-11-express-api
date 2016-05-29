@@ -51,14 +51,23 @@ describe('testing module note-router', function(){
       });
     });
   });
-
-
+  describe('with no body', function(){
+    it('should return a note', function(done){
+      request.post(baseUrl)
+      .end((err,res) =>{
+        expect(res.status).to.equal(400);
+        expect(res.text).to.equal('bad request');
+        done();
+      });
+    });
+  });
   describe('testing GET /api/note', function(){
     before((done)=>{
       this.tempNote = new Note('test data');
-      storage.pool.note[this.tempNote.id] = this.tempNote;
-      // setItem('note', this.tempNote);
+      storage.setItem('note', this.tempNote);
+      console.log(this.tempNote);
       done();
+
     });
     after((done) =>{
       storage.pool = {};
@@ -70,6 +79,61 @@ describe('testing module note-router', function(){
         expect(res.status).to.equal(200);
         expect(res.body.content).to.equal(this.tempNote.content);
         expect(res.body.id).to.equal(this.tempNote.id);
+        done();
+      });
+    });
+  });
+  describe('testing GET error at endpoint', function(){
+    it('should return an error', function(done){
+      request.get(`${baseUrl}/123`)
+      .end((err,res) =>{
+        expect(res.status).to.equal(404);
+        expect(res.text).to.equal('not found');
+        done();
+      });
+    });
+  });
+  describe('testing PUT /api/note', function(){
+    before((done)=>{
+      this.tempNote = new Note('test data');
+      storage.setItem('note', this.tempNote);
+      console.log(this.tempNote);
+      done();
+    });
+    after((done) =>{
+      storage.pool = {};
+      done();
+    });
+    it('should return a revised note', (done)=>{
+      request.put(`${baseUrl}/`)
+      .send({content:'revised note', id:this.tempNote.id})
+      .end((err,res)=>{
+        console.log(this.tempNote);
+        expect(res.status).to.equal(200);
+        expect(res.body.content).to.equal('revised note');
+        expect(res.body.id).to.equal(this.tempNote.id);
+        done();
+      });
+    });
+  });
+  describe('testing PUT api/note', function(){
+    it('should return a error', function(done){
+      request.put(`${baseUrl}/`)
+      .send({content:'revised note', id:123})
+      .end((err,res) =>{
+        expect(res.status).to.equal(404);
+        expect(res.text).to.equal('not found');
+        done();
+      });
+    });
+  });
+  describe('testing PUT api/note', function(){
+    it('should return a error', function(done){
+      request.put(`${baseUrl}/`)
+      .send({})
+      .end((err,res) =>{
+        expect(res.status).to.equal(400);
+        expect(res.text).to.equal('bad request');
         done();
       });
     });

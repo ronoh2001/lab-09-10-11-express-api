@@ -31,8 +31,12 @@ exports.fetchItem = function(schema, id){
 exports.updateItem = function(schema, id, item) {
   debug('updateItem');
   return new Promise((resolve, reject)=>{
+    if (!id) {
+      var err = AppError.error400('bad request');
+      return reject(err);
+    }
     if(!this.pool[schema]){
-      var err = AppError.error404('storage schema not found');
+      err = AppError.error404('storage schema not found');
       return reject(err);
     }
     if(!this.pool[schema][id]){
