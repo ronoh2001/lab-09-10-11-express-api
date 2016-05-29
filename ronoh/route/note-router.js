@@ -1,12 +1,15 @@
 'use strict';
 
 const Router = require('express').Router;
-const noteRouter = module.exports = new Router();
 const debug = require('debug')('note:note-router');
+const bodyParser = require('body-parser').json();
+
 const AppError = require('../lib/app-error');
 const storage = require('../lib/storage');
 const Note = require('../model/note');
-const bodyParser = require('body-parser').json();
+// const sendError = require('../lib/error-response');
+
+const noteRouter = module.exports = new Router();
 
 function createNote(reqBody){
   debug('createNote');
@@ -30,6 +33,7 @@ noteRouter.post('/', bodyParser, function(req, res){
   createNote(req.body).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
+    // res.sendError(err);
     console.error(err.message);
     if(AppError.isAppError(err)){
       res.status(err.statusCode).send(err.responseMessage);
@@ -40,6 +44,7 @@ noteRouter.post('/', bodyParser, function(req, res){
 });
 
 noteRouter.get('/', bodyParser, function(req, res){
+  debug('hit endpoint /api/note GET');
   storage.fetchItem('note', req.params.id).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
@@ -53,6 +58,7 @@ noteRouter.get('/', bodyParser, function(req, res){
 });
 
 noteRouter.put('/', bodyParser, function(req, res){
+  debug('hit endpoint /api/note PUT');
   storage.updateItem('note', req.params.id).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
@@ -68,6 +74,7 @@ noteRouter.put('/', bodyParser, function(req, res){
 });
 
 noteRouter.delete('/', function(req, res){
+  debug('hit endpoint /api/note DELETE');
   storage.deleteItem('note', req.params.id).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){

@@ -26,6 +26,7 @@ describe('testing module note-router', function(){
   after((done) =>{
     if(server.isRunning){
       server.close(() =>{
+        server.isRunning = false;
         console.log('shutting down the test server');
         done();
       });
@@ -50,10 +51,13 @@ describe('testing module note-router', function(){
       });
     });
   });
+
+
   describe('testing GET /api/note', function(){
     before((done)=>{
       this.tempNote = new Note('test data');
-      storage.setItem('note', this.tempNote);
+      storage.pool.note[this.tempNote.id] = this.tempNote;
+      // setItem('note', this.tempNote);
       done();
     });
     after((done) =>{
