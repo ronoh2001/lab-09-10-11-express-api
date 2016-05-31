@@ -65,7 +65,7 @@ describe('testing module note-router', function(){
     before((done)=>{
       this.tempNote = new Note('test data');
       storage.setItem('note', this.tempNote);
-      console.log(this.tempNote);
+      //console.log(this.tempNote);
       done();
 
     });
@@ -79,6 +79,16 @@ describe('testing module note-router', function(){
         expect(res.status).to.equal(200);
         expect(res.body.content).to.equal(this.tempNote.content);
         expect(res.body.id).to.equal(this.tempNote.id);
+        done();
+      });
+    });
+    it('should return a error', (done) => {
+      console.log(this.tempNote.id);
+      request.put(`${baseUrl}/${this.tempNote.id}`)
+      .send({})
+      .end((err,res) =>{
+        expect(res.status).to.equal(400);
+        expect(res.text).to.equal('bad request');
         done();
       });
     });
@@ -97,7 +107,7 @@ describe('testing module note-router', function(){
     before((done)=>{
       this.tempNote = new Note('test data');
       storage.setItem('note', this.tempNote);
-      console.log(this.tempNote);
+      //console.log(this.tempNote);
       done();
     });
     after((done) =>{
@@ -105,7 +115,7 @@ describe('testing module note-router', function(){
       done();
     });
     it('should return a revised note', (done)=>{
-      request.put(`${baseUrl}/`)
+      request.put(`${baseUrl}/${this.tempNote.id}`)
       .send({content:'revised note', id:this.tempNote.id})
       .end((err,res)=>{
         console.log(this.tempNote);
@@ -118,7 +128,7 @@ describe('testing module note-router', function(){
   });
   describe('testing PUT api/note', function(){
     it('should return a error', function(done){
-      request.put(`${baseUrl}/`)
+      request.put(`${baseUrl}/123`)
       .send({content:'revised note', id:123})
       .end((err,res) =>{
         expect(res.status).to.equal(404);
@@ -128,14 +138,6 @@ describe('testing module note-router', function(){
     });
   });
   describe('testing PUT api/note', function(){
-    it('should return a error', function(done){
-      request.put(`${baseUrl}/`)
-      .send({})
-      .end((err,res) =>{
-        expect(res.status).to.equal(400);
-        expect(res.text).to.equal('bad request');
-        done();
-      });
-    });
+
   });
 });

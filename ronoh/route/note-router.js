@@ -46,9 +46,9 @@ noteRouter.get('/:id', sendError, function(req, res){
   });
 });
 
-noteRouter.put('/', bodyParser, sendError, function(req, res){
+noteRouter.put('/:id', bodyParser, sendError, function(req, res){
   debug('hit endpoint /api/note PUT');
-  storage.updateItem('note', req.body.id, req.body).then(function(note){
+  storage.updateItem('note', req.params.id, req.body).then(function(note){
     res.status(200).json(note);
   }).catch(function(err){
     res.sendError(err);

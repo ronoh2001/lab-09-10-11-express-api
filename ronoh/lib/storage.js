@@ -43,7 +43,12 @@ exports.updateItem = function(schema, id, item) {
       err = AppError.error404('ID not found');
       return reject(err);
     }
-    this.pool[schema][id].content = item.content;
+    if(item.content) {
+      this.pool[schema][id].content = item.content;
+    } else {
+      err = AppError.error400('bad request');
+      return reject(err);
+    }
     resolve(this.pool[schema][id]);
   });
 };
