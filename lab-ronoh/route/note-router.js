@@ -55,7 +55,7 @@ noteRouter.put('/:id', bodyParser, sendError, function(req, res){
   });
 });
 
-noteRouter.delete('/', sendError, function(req, res){
+noteRouter.delete('/:id', sendError, function(req, res){
   debug('hit endpoint /api/note DELETE');
   storage.deleteItem('note', req.body.id).then(function(note){
     res.status(200).json(note);

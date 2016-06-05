@@ -83,7 +83,7 @@ describe('testing module note-router', function(){
       });
     });
     it('should return a error', (done) => {
-      console.log(this.tempNote.id);
+      // console.log(this.tempNote.id);
       request.put(`${baseUrl}/${this.tempNote.id}`)
       .send({})
       .end((err,res) =>{
