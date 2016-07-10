@@ -137,7 +137,32 @@ describe('testing module note-router', function(){
       });
     });
   });
-  describe('testing PUT api/note', function(){
-
+  describe('testing DELETE api/note', function(){
+    before((done)=>{
+      this.tempNote = new Note('test data');
+      storage.setItem('note', this.tempNote);
+      //console.log(this.tempNote);
+      done();
+    });
+    after((done) =>{
+      storage.pool = {};
+      done();
+    });
+    it('should delete the note', function(done){
+      request.del(`${baseUrl}/this.tempNote.id`)
+      .end((err, res) =>{
+        expect(res.status).to.equal(200);
+        done();
+      });
+    });
+  });
+  describe('testing DELETE error no note id', function(){
+    it('should show an error not found', function(done){
+      request.del(`${baseUrl}/5678`)
+      .end((err, res) =>{
+        expect(res.status).to.equal(404);
+        done();
+      });
+    });
   });
 });
